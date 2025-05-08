@@ -1,0 +1,6 @@
+@material.web_HostAddress = http://localhost:5091
+
+GET {{material.web_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
