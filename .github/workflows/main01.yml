@@ -96,7 +96,7 @@ jobs:
       - name: Push & Deploy to Cloud Run (Dev)
         run: |
           IMAGE_TAG=${{ needs.build.outputs.image_tag }}
-          GAR_URI=${GAR_REGION}-docker.pkg.dev/proj-vertex-dev-4c43/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
+          GAR_URI=${GAR_REGION}-docker.pkg.dev/workingpaper01/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
           docker tag $IMAGE_NAME:$IMAGE_TAG $GAR_URI
           docker push $GAR_URI
           gcloud run deploy $CLOUD_RUN_SERVICE_NAME_DEV \
