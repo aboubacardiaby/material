@@ -96,6 +96,7 @@ jobs:
 
       - name: Authenticate Docker to Artifact Registry
         run: |
+            ls -l key.json
             printf '%s' "${{ secrets.SAKEY }}" > key.json
             gcloud auth activate-service-account --key-file=key.json
             gcloud config set project workingpaper01
