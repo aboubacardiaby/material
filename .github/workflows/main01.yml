@@ -92,7 +92,13 @@ jobs:
       - name: Load Docker Image
         run: |
           docker load -i webapi-image.tar
-
+      - name: Authenticate Docker to Artifact Registry
+        run: |
+            echo ${{ secrets.SAKEY }} > key.json
+            gcloud auth activate-service-account --key-file=key.json
+            gcloud config set project workingpaper01
+            gcloud auth configure-docker us-central1-docker.pkg.dev
+  
       - name: Push & Deploy to Cloud Run (Dev)
         run: |
           IMAGE_TAG=build-${{ github.run_number }}
