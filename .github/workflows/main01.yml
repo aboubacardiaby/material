@@ -1,0 +1,110 @@
+name: Material CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - develop-05
+
+env:
+  GAR_REGION: us-central1
+  IMAGE_NAME: material-image
+  REPO_NAME: material-repo
+  CLOUD_RUN_REGION: us-central1
+  CLOUD_RUN_SERVICE_NAME_DEV: material-dev-service
+ 
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set_tag.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.x
+
+      - name: Build Solution
+        run: dotnet build --configuration Release
+
+      - name: Publish Solution
+        run: dotnet publish --configuration Release --output ./publish
+
+      - name: Set Image Tag
+        id: set_tag
+        run: echo "image_tag=${{ github.run_number }}" >> $GITHUB_OUTPUT
+
+      - name: Build Docker Image
+        run: |
+          docker build -t $IMAGE_NAME:${{ steps.set_tag.outputs.image_tag }} .
+          docker save $IMAGE_NAME:${{ steps.set_tag.outputs.image_tag }} -o webapi-image.tar
+
+      - name: Upload Image Tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-tarball
+          path: webapi-image.tar
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.x
+
+      - name: Run Unit Tests
+        run: |
+          dotnet restore ./material/material.csproj
+          dotnet test ./materialTests/materialTests.csproj --logger trx --results-directory TestResults
+
+      - name: Publish Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+
+  deploy-dev:
+    name: Deploy to Dev
+    runs-on: ubuntu-latest
+    needs: test
+    environment: development
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: docker-image-tarball
+
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.SAKEY }}
+          project_id: workingpaper01
+
+      - name: Load Docker Image
+        run: |
+          docker load -i webapi-image.tar
+
+      - name: Push & Deploy to Cloud Run (Dev)
+        run: |
+          IMAGE_TAG=${{ needs.build.outputs.image_tag }}
+          GAR_URI=${GAR_REGION}-docker.pkg.dev/proj-vertex-dev-4c43/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
+          docker tag $IMAGE_NAME:$IMAGE_TAG $GAR_URI
+          docker push $GAR_URI
+          gcloud run deploy $CLOUD_RUN_SERVICE_NAME_DEV \
+            --image=$GAR_URI \
+            --platform=managed \
+            --region=$CLOUD_RUN_REGION \
+            --allow-unauthenticated \
+            --port=8080 \          
+            --memory=512Mi --cpu=1 --min-instances=1 --max-instances=3 \
+            --set-env-vars=ASPNETCORE_ENVIRONMENT=Development
+
+  
