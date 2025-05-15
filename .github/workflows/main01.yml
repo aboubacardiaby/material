@@ -64,8 +64,8 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          dotnet restore ./material/material.csproj
-          dotnet test ./materialTests/materialTests.csproj --logger trx --results-directory TestResults
+          dotnet restore ./material.Tests/material.Tests.csproj
+          dotnet test ./material.Tests/material.Tests.csproj --logger trx --results-directory TestResults
 
       - name: Publish Test Results
         uses: actions/upload-artifact@v4

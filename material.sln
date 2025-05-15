@@ -3,7 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "material.web", "material.web\material.web.csproj", "{AB2A7F81-374B-4A53-A86E-11DD98FF9CF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "material.web", "material.web\material.web.csproj", "{AB2A7F81-374B-4A53-A86E-11DD98FF9CF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "material.Tests", "material.Tests\material.Tests.csproj", "{6381E7B0-40BD-4964-94ED-0B0E0A89E230}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A5628CD5-4E35-4740-AD42-8AFB32C3706C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{9C608254-6847-4F83-86EA-F9AAB02BD4E4}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\main.yml = .github\workflows\main.yml
+		.github\workflows\main01.yml = .github\workflows\main01.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +25,16 @@ Global
 		{AB2A7F81-374B-4A53-A86E-11DD98FF9CF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB2A7F81-374B-4A53-A86E-11DD98FF9CF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB2A7F81-374B-4A53-A86E-11DD98FF9CF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6381E7B0-40BD-4964-94ED-0B0E0A89E230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6381E7B0-40BD-4964-94ED-0B0E0A89E230}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6381E7B0-40BD-4964-94ED-0B0E0A89E230}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6381E7B0-40BD-4964-94ED-0B0E0A89E230}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9C608254-6847-4F83-86EA-F9AAB02BD4E4} = {A5628CD5-4E35-4740-AD42-8AFB32C3706C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {579299EC-BAB2-4D7B-B884-53E8500287DF}
