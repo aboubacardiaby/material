@@ -37,12 +37,12 @@ jobs:
 
       - name: Set Image Tag
         id: set_tag
-        run: echo "image_tag=${{ github.run_number }}" >> $GITHUB_OUTPUT
+        run: echo "image_tag=build-${{ github.run_number }}" >> $GITHUB_OUTPUT
 
       - name: Build Docker Image
         run: |
-          docker build -t $IMAGE_NAME:${{ steps.set_tag.outputs.image_tag }} .
-          docker save $IMAGE_NAME:${{ steps.set_tag.outputs.image_tag }} -o webapi-image.tar
+          docker build -t $IMAGE_NAME:build-${{ github.run_number }} .
+          docker save $IMAGE_NAME:build-${{ github.run_number }} -o webapi-image.tar
 
       - name: Upload Image Tarball
         uses: actions/upload-artifact@v4
@@ -95,7 +95,7 @@ jobs:
 
       - name: Push & Deploy to Cloud Run (Dev)
         run: |
-          IMAGE_TAG=${{ needs.build.outputs.image_tag }}
+          IMAGE_TAG=build-${{ github.run_number }}
           GAR_URI=${GAR_REGION}-docker.pkg.dev/workingpaper01/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
           docker tag $IMAGE_NAME:$IMAGE_TAG $GAR_URI
           docker push $GAR_URI
