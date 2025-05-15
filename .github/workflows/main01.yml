@@ -96,11 +96,12 @@ jobs:
 
       - name: Authenticate Docker to Artifact Registry
         run: |
-          ls -l key.json
-          echo ${{ secrets.SAKEY }} > key.json          
-          gcloud auth activate-service-account --key-file=key.json
-          gcloud config set project workingpaper01
-          gcloud auth configure-docker us-central1-docker.pkg.dev
+           echo "${{ secrets.SAKEY }}" > key.json
+           gcloud auth activate-service-account --key-file=key.json
+           gcloud config set project workingpaper01
+           gcloud auth configure-docker us-central1-docker.pkg.dev
+        shell: bash
+
   
       - name: Push & Deploy to Cloud Run (Dev)
         run: |
