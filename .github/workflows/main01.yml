@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop-05
+      - main
 
 env:
   GAR_REGION: us-central1
