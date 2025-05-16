@@ -9,7 +9,7 @@ on:
 env:
   GAR_REGION: us-central1
   IMAGE_NAME: material-image
-  REPO_NAME: demoapi
+  REPO_NAME: material-repo
   CLOUD_RUN_REGION: us-central1
   CLOUD_RUN_SERVICE_NAME_DEV: material-dev-service
  
