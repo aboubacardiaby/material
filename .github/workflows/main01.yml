@@ -96,12 +96,11 @@ jobs:
 
       - name: Authenticate Docker to Artifact Registry
         run: |
-            ls 
-            printf '%s' "${{ secrets.SAKEY }}" > key.json
-            gcloud auth activate-service-account --key-file=key.json
-            gcloud config set project workingpaper01
-            gcloud auth configure-docker us-central1-docker.pkg.dev
-            rm key.json
+          echo '${{ secrets.SAKEY }}' > key.json
+          gcloud auth activate-service-account --key-file=key.json
+          gcloud config set project workingpaper01
+          gcloud auth configure-docker us-central1-docker.pkg.dev
+          rm key.json
         shell: bash
   
       - name: Push & Deploy to Cloud Run (Dev)
@@ -115,8 +114,6 @@ jobs:
             --platform=managed \
             --region=$CLOUD_RUN_REGION \
             --allow-unauthenticated \
-            --port=8080 \          
+            --port=8080 \
             --memory=512Mi --cpu=1 --min-instances=1 --max-instances=3 \
             --set-env-vars=ASPNETCORE_ENVIRONMENT=Development
-
-  
