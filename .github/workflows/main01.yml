@@ -87,7 +87,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           service_account_key: ${{ secrets.SAKEY }}
-          project_id: devop360
+          project_id: devops360-460214
 
       - name: Load Docker Image
         run: |
@@ -98,7 +98,7 @@ jobs:
         run: |
           echo '${{ secrets.SAKEY }}' > key.json
           gcloud auth activate-service-account --key-file=key.json
-          gcloud config set project devop360
+          gcloud config set project devops360-460214
           gcloud auth configure-docker us-central1-docker.pkg.dev
           rm key.json
         shell: bash
@@ -106,7 +106,7 @@ jobs:
       - name: Push & Deploy to Cloud Run (Dev)
         run: |
           IMAGE_TAG=build-${{ github.run_number }}
-          GAR_URI=${GAR_REGION}-docker.pkg.dev/devop360/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
+          GAR_URI=${GAR_REGION}-docker.pkg.dev/devops360-460214/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
           docker tag $IMAGE_NAME:$IMAGE_TAG $GAR_URI
           docker push $GAR_URI
           gcloud run deploy $CLOUD_RUN_SERVICE_NAME_DEV \
@@ -131,7 +131,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
         with:
           service_account_key: ${{ secrets.SAKEY }}
-          project_id: devop360
+          project_id: devops360-460214
       - name: Load Docker Image
         run: |
           docker load -i webapi-image.tar
@@ -140,7 +140,7 @@ jobs:
         run: |
           echo '${{ secrets.SAKEY }}' > key.json
           gcloud auth activate-service-account --key-file=key.json
-          gcloud config set project devop360
+          gcloud config set project devops360-460214
           gcloud auth configure-docker us-central1-docker.pkg.dev
           rm key.json
         shell: bash
@@ -148,7 +148,7 @@ jobs:
       - name: Push & Deploy to Cloud Run (QA)
         run: |
           IMAGE_TAG=build-${{ github.run_number }}
-          GAR_URI=${GAR_REGION}-docker.pkg.dev/devop360/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
+          GAR_URI=${GAR_REGION}-docker.pkg.dev/devops360-460214/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
           docker tag $IMAGE_NAME:$IMAGE_TAG $GAR_URI
           docker push $GAR_URI
           gcloud run deploy material-qa-service \
@@ -173,7 +173,7 @@ jobs:
        uses: google-github-actions/setup-gcloud@v2
        with:
           service_account_key: ${{ secrets.SAKEY }}
-          project_id: devop360
+          project_id: devops360-460214
      - name : Load Docker Image
        run: |
            docker load -i webapi-image.tar
@@ -182,14 +182,14 @@ jobs:
        run: |
           echo '${{ secrets.SAKEY }}' > key.json
           gcloud auth activate-service-account --key-file=key.json
-          gcloud config set project devop360
+          gcloud config set project devops360-460214
           gcloud auth configure-docker us-central1-docker.pkg.dev
           rm key.json
        shell: bash 
      - name: Push & Deploy to Cloud Run (Prod)
        run: |
           IMAGE_TAG=build-${{ github.run_number }}
-          GAR_URI=${GAR_REGION}-docker.pkg.dev/devop360/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
+          GAR_URI=${GAR_REGION}-docker.pkg.dev/devops360-460214/${REPO_NAME}/${IMAGE_NAME}:${IMAGE_TAG}
           docker tag $IMAGE_NAME:$IMAGE_TAG $GAR_URI
           docker push $GAR_URI
           gcloud run deploy material-prod-service \
