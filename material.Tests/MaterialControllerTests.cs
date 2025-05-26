@@ -23,7 +23,7 @@ namespace material.Tests
         [Test]
         public void GetAll_ReturnsOkResult_WithListOfMaterials()
         {
-            // Act
+            // Act nn
             var result = _controller.GetAll();
 
             // Assert
