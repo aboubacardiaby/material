@@ -11,7 +11,7 @@ env:
   GCP_REGION: us-central1
   GCR_REPO: web-repo
   IMAGE_NAME: myapp
-  SONAR_PROJECT_KEY: material4
+  SONAR_PROJECT_KEY: material4  #Replace with your SonarQube project key
   SONAR_HOST_URL: http://35.222.233.219:9000
 
 jobs:
