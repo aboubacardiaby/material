@@ -7,6 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "material.web", "material.we
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".GitHub", ".GitHub", "{60940ABA-0C54-43EA-BF81-D2233C93E4D0}"
 	ProjectSection(SolutionItems) = preProject
+		build.yml = build.yml
 		.github\workflows\main.yml = .github\workflows\main.yml
 	EndProjectSection
 EndProject
