@@ -65,4 +65,5 @@ jobs:
           --image ${{ env.GCR_REPO }}/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:latest \
           --platform managed \
           --region ${{ env.GCP_REGION }} \
-          --project ${{ env.GCP_PROJECT_I
+          --project ${{ env.GCP_PROJECT_ID }} \
+          --allow-unauthenticated
