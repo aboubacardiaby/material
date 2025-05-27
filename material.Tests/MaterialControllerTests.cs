@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
+using NUnit.Framework;
 using Material.Web.Models;
-using System.Threading.Tasks;
 using material.web.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -23,58 +22,45 @@ namespace material.Tests
         [Test]
         public void GetAll_ReturnsOkResult_WithListOfMaterials()
         {
-            // Act nn
+            // Act  
             var result = _controller.GetAll();
 
-            // Assert
-            Assert.IsInstanceOf<OkObjectResult>(result.Result);
+            // Assert  
+            Assert.That(result.Result, Is.InstanceOf<OkObjectResult>());
 
             var okResult = result.Result as OkObjectResult;
-            Assert.IsNotNull(okResult);
+            Assert.That(okResult, Is.Not.Null);
 
             var materials = okResult.Value as IEnumerable<MaterialEntity>;
-            Assert.IsNotNull(materials);
-            Assert.AreEqual(2, materials.Count());
+            Assert.That(materials, Is.Not.Null);
+            Assert.That(materials.Count(), Is.EqualTo(2));
         }
-        //[Test]
-        //public void GetAll_ReturnsOkResult_WithListOfMaterials()
-        //{
-        //    // Act
-        //    var result = _controller.GetAll();
-
-        //    // Assert
-        //    Assert.IsInstanceOf<OkObjectResult>(result.Result);
-
-        //    var okResult = result.Result as OkObjectResult;
-        //    Assert.IsNotNull(okResult);
-
-        //    var materials = okResult.Value as IEnumerable<MaterialEntity>;
-        //    Assert.IsNotNull(materials);
-        //    Assert.AreEqual(2, materials.Count());
-        //}
 
         [Test]
         public void GetAll_ReturnsMaterials_WithExpectedProperties()
         {
-            // Act
+            // Act  
             var result = _controller.GetAll();
 
-            // Assert
+            // Assert  
             var okResult = result.Result as OkObjectResult;
-            Assert.IsNotNull(okResult);
+            Assert.That(okResult, Is.Not.Null);
 
             var materials = okResult.Value as IEnumerable<MaterialEntity>;
-            Assert.IsNotNull(materials);
+            Assert.That(materials, Is.Not.Null);
 
             var materialList = materials.ToList();
 
-            Assert.AreEqual(1, materialList[0].Id);
-            Assert.AreEqual("Material 1", materialList[0].Name);
-            Assert.AreEqual("Description for Material 1", materialList[0].Description);
+            Assert.That(materialList[0].Id, Is.EqualTo(1));
+            Assert.That(materialList[0].Name, Is.EqualTo("Material 1"));
+            Assert.That(materialList[0].Description, Is.EqualTo("Description for Material 1"));
 
-            Assert.AreEqual(2, materialList[1].Id);
-            Assert.AreEqual("Material 2", materialList[1].Name);
-            Assert.AreEqual("Description for Material 2", materialList[1].Description);
+            Assert.That(materialList[1].Id, Is.EqualTo(2));
+            Assert.That(materialList[1].Name, Is.EqualTo("Material 2"));
+            Assert.That(materialList[1].Description, Is.EqualTo("Description for Material 2"));
         }
     }
+    // The NuGet package required for NUnit assertions is: NUnit  
+    // You can install it using the following command in the NuGet Package Manager Console:  
+    // Install-Package NUnit
 }
