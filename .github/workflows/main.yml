@@ -1,38 +1,68 @@
-name: Build and Push .NET 8 Docker Image
+name: Build, Push Docker Image, and Deploy to Cloud Run
 
 on:
   push:
-    branches: 
+    branches:
       - main
       - develop
       - release
 
 jobs:
-  build-and-push:
+  build-push-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Setup .NET 8 SDK
       - name: Setup .NET 8 SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
+      # Restore dependencies
       - name: Restore dependencies
         run: dotnet restore material.sln
 
+      # Build the solution
       - name: Build solution
         run: dotnet build material.sln --configuration Release --no-restore
 
+      # Docker Hub login
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
+      # Build Docker image
       - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/material:${{ github.ref_name }} .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/material:${{ github.ref_name }} .
 
+      # Push Docker image
       - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/material:${{ github.ref_name }}
+
+      # Authenticate to GCP
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      # Deploy to Cloud Run
+      - name: authenticate Docker to GCR
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/material:${{ github.ref_name }}
+          gcloud config set run/region ${{ secrets.CLOUD_RUN_REGION }}
+          gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+          gcloud auth configure-docker --quiet
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://gcr.io
+      
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy material-service \
+            --image=${{ secrets.DOCKER_USERNAME }}/material:${{ github.ref_name }} \
+            --region=${{ secrets.CLOUD_RUN_REGION }} \
+            --platform=managed \
+            --allow-unauthenticated \
+            --project=${{ secrets.GCP_PROJECT_ID }}
